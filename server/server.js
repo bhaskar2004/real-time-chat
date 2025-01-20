@@ -14,62 +14,27 @@ const http = require('http').createServer(app);
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Updated CORS configuration
+// Update your CORS configuration in server.js
 const corsOptions = {
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            'http://localhost:5173',
-            'http://localhost:3000',
-            'http://127.0.0.1:5500',
-            'https://your-netlify-app.netlify.app' // Add your Netlify domain
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: ['https://messagehere.netlify.app', 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-app.use(cors(corsOptions));
-
-// // Improved CORS configuration
-// const allowedOrigins = process.env.NODE_ENV === 'production'
-//     ? ['https://your-production-domain.com']
-//     : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5500'];  // Include Vite's default port
-
-
-// app.use(cors({
-//     origin: (origin, callback) => {
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error('Not allowed by CORS'));
-//         }
-//     },
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     credentials: true,
-// }));
-
-// app.use((req, res, next) => {
-//     res.setHeader("Cross-Origin-Opener-Policy", "unsafe-none");
-//     res.setHeader("Cross-Origin-Embedder-Policy", "unsafe-none");
-//     next();
-//   });
 app.use((req, res, next) => {
-    // Disable COOP and COEP for Google Sign-In
+    // Allow popups for Google Sign-In
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     
     // Additional security headers
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Access-Control-Allow-Origin', 'https://messagehere.netlify.app');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     
     next();
-});  
+});
 
 // Socket.io configuration
 const io = require('socket.io')(http, {
