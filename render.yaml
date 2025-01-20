@@ -3,7 +3,7 @@ services:
     name: chat-app-backend
     env: node
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: cd server && node server.js
     envVars:
       - key: MONGODB_URI
         sync: false
