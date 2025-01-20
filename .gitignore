@@ -1,0 +1,14 @@
+# Ignore node_modules for both client and server
+/node_modules
+/server/node_modules
+
+# Ignore build output
+/client/dist
+/client/build
+
+# Other ignores
+.env
+.DS_Store
+
+# Local Netlify folder
+.netlify

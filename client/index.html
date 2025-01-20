@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- <script>
+        function handleGoogleApiLoad() {
+            console.log('Google API loaded successfully');
+            initializeGoogleSignIn();
+        }
+    </script> -->
+</head>
+<body>
+    <div class="container">
+        <!-- Auth Container -->
+        <!-- Auth Container -->
+<div class="login-container" id="loginContainer">
+    <h2>Welcome to Chat App</h2>
+    <div class="auth-content">
+        <p class="auth-description">Sign in with your Google account to start chatting</p>
+        <div id="googleSignInButton" class="google-signin-button"></div>
+    </div>
+</div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer" style="display: none;">
+            <div class="profile-sidebar">
+                <div class="current-user-profile" id="currentUserProfile">
+                    <!-- Current user profile content -->
+                </div>
+                <div class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Active Users</h3>
+                        <div class="search-container">
+                            <input type="text" id="userSearch" placeholder="Search users..." />
+                        </div>
+                    </div>
+                    <div class="users-list-container">
+                        <ul id="userList" class="users-list">
+                            <!-- User list populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-main">
+                <div class="chat-header" id="chatHeader">
+                    <div class="default-header">
+                        <h3>Select a user to start chatting</h3>
+                    </div>
+                </div>
+                
+                <div class="chat-body">
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages inserted by JS -->
+                    </div>
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-bubble">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <span class="typing-text"></span>
+                    </div>
+                </div>
+                
+                <form class="chat-input" id="messageForm">
+                    <div class="input-wrapper">
+                        <input type="text" id="messageInput" placeholder="Type a message..." disabled />
+                        <!-- <button type="button" id="emojiButton" class="emoji-button">😊</button> -->
+                    </div>
+                    <div class="input-actions">
+                        <button type="button" id="voiceRecordButton" class="action-button">
+                            <span class="mic-icon">🎤</span>
+                        </button>
+                        <input type="file" id="fileInput" style="display: none" multiple>
+                        <button type="button" id="attachFileButton" class="action-button">
+                            <span class="attachment-icon">📎</span>
+                        </button>
+                    </div>
+                    <button type="submit" class="send-button">Send</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-toggle">
+            <button id="themeToggle" class="theme-toggle-btn">
+                <span class="light-icon">☀️</span>
+                <span class="dark-icon">🌙</span>
+            </button>
+        </div>
+
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="connection-status">
+            <span class="status-dot"></span>
+            <span class="status-text">Connected</span>
+        </div>
+    </div>
+
+    <!-- Emoji Picker Modal -->
+    <div id="emojiPicker" class="emoji-picker" style="display: none">
+        <div class="emoji-grid">
+            <button type="button" class="emoji">😊</button>
+            <button type="button" class="emoji">😂</button>
+            <button type="button" class="emoji">👍</button>
+            <button type="button" class="emoji">❤️</button>
+            <button type="button" class="emoji">👋</button>
+            <button type="button" class="emoji">🎉</button>
+            <button type="button" class="emoji">🤔</button>
+            <button type="button" class="emoji">😎</button>
+        </div>
+    </div>
+
+    <!-- Add this just before closing body tag -->
+<script>
+    window.onload = function() {
+        if (typeof google !== 'undefined') {
+            handleGoogleApiLoad();
+        } else {
+            console.error('Google API not loaded');
+            handleGoogleApiError();
+        }
+    }
+    function handleGoogleApiLoad() {
+        console.log('Google API loaded successfully');
+        google.accounts.id.initialize({
+            client_id: '51565630705-8tp5ar0uouqr70pannk4ptq38fquniir.apps.googleusercontent.com',
+            callback: handleGoogleSignIn,
+            auto_select: false,
+            cancel_on_tap_outside: true
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById('googleSignInButton'),
+            { 
+                theme: 'outline', 
+                size: 'large',
+                width: '400'
+            }
+        );
+    }
+</script>
+    <script src="script.js"></script>
+</body>
+</html>
