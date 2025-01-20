@@ -1,0 +1,4 @@
+services:
+  - type: web
+    buildCommand: npm install
+    startCommand: node server/server.js  # Adjust path as needed
