@@ -13,9 +13,6 @@ const googleClient = new OAuth2Client({
 const app = express();
 const http = require('http').createServer(app);
 
-// Google OAuth client
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 const corsOptions = {
     origin: [
         'https://warm-twilight-c35b54.netlify.app/',
