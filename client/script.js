@@ -1,14 +1,18 @@
 let chatApp = null;
 class ChatApp {
     constructor() {
-        // Near the start of script.js
-this.socket = io(process.env.BACKEND_URL || 'http://localhost:3000', {
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    reconnectionAttempts: 5,
-    withCredentials: true
-});
+        // Get backend URL from window.__env or fall back to a default
+        const BACKEND_URL = window.__env?.BACKEND_URL || 'http://localhost:3000';
+        
+        this.socket = io(BACKEND_URL, {
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+            reconnectionAttempts: 5,
+            withCredentials: true
+        });
+        
+        // Rest of the constructor remains the same
         this.currentUser = null;
         this.currentUserProfile = null;
         this.selectedUser = null;
@@ -20,9 +24,7 @@ this.socket = io(process.env.BACKEND_URL || 'http://localhost:3000', {
         this.setupSocketListeners();
         this.setupUIListeners();
         this.initializeUI();
-        chatApp=this;
     }
-
     initializeMediaHandlers() {
         this.setupVoiceRecording();
         this.setupFileUpload();
@@ -854,22 +856,43 @@ class ThemeManager {
         }
     }
 }
+// Add this before your script loads
+window.__env = {
+    BACKEND_URL: 'https://message-59iz.onrender.com' // Change this to your actual backend URL
+};
+function initializeApp() {
+    try {
+        if (!chatApp) {
+            chatApp = new ChatApp();
+            console.log('ChatApp initialized successfully');
+        }
+    } catch (error) {
+        console.error('Failed to initialize ChatApp:', error);
+    }
+}
 
-// Update the DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize ChatApp if not already initialized
-    if (!chatApp) {
-        chatApp = new ChatApp();
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (chatApp?.currentUser) {
+        // Notify server about user disconnection
+        chatApp.socket.emit('userDisconnect', {
+            userId: chatApp.currentUser.userId
+        });
+        
+        // Cleanup socket connection
+        chatApp.socket.disconnect();
     }
 });
 
-window.addEventListener('beforeunload', () => {
-    if (window.chatApp?.currentUser) {
-        window.chatApp.socket.emit('userDisconnect', {
-            userId: window.chatApp.currentUser.userId
-        });
-
-
+// Handle errors that might occur during socket operations
+window.addEventListener('error', (event) => {
+    console.error('Global error:', event.error);
+    
+    // Attempt to reconnect if it's a socket-related error
+    if (chatApp?.socket && !chatApp.socket.connected) {
+        chatApp.socket.connect();
     }
-    window.chatApp?.socket.disconnect();
 });
