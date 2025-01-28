@@ -13,29 +13,29 @@ const http = require('http').createServer(app);
 // Google OAuth client
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Updated CORS configuration
-// Update your CORS configuration in server.js
 const corsOptions = {
-    origin: ['https://messagehere.netlify.app', 'http://localhost:5173', 'http://localhost:3000'],
+    origin: [
+        'https://your-netlify-app.netlify.app',
+        'http://localhost:5173',
+        'http://localhost:3000'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use((req, res, next) => {
-    // Allow popups for Google Sign-In
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
     res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     
-    // Additional security headers
-    res.setHeader('Access-Control-Allow-Origin', 'https://messagehere.netlify.app');
+    // Update this to your Netlify domain
+    res.setHeader('Access-Control-Allow-Origin', 'https://your-netlify-app.netlify.app');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     
     next();
 });
-
 // Socket.io configuration
 const io = require('socket.io')(http, {
     cors: {

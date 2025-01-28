@@ -858,7 +858,7 @@ class ThemeManager {
 }
 // Add this before your script loads
 window.__env = {
-    BACKEND_URL: 'https://message-59iz.onrender.com' // Change this to your actual backend URL
+    BACKEND_URL: 'https://real-time-chat-2lt4.onrender.com' // Change this to your actual backend URL
 };
 function initializeApp() {
     try {
