@@ -6,7 +6,10 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 const { OAuth2Client } = require('google-auth-library');
 require('dotenv').config();
-
+const googleClient = new OAuth2Client({
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET
+});
 const app = express();
 const http = require('http').createServer(app);
 
@@ -36,6 +39,7 @@ app.use((req, res, next) => {
     
     next();
 });
+
 // Socket.io configuration
 const io = require('socket.io')(http, {
     cors: {
