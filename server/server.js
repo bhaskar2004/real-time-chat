@@ -15,7 +15,7 @@ const http = require('http').createServer(app);
 
 const corsOptions = {
     origin: [
-        'https://warm-twilight-c35b54.netlify.app/',
+        'https://warm-twilight-c35b54.netlify.app',  // Remove trailing slash
         'http://localhost:5173',
         'http://localhost:3000'
     ],
@@ -24,20 +24,10 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-app.use((req, res, next) => {
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
-    
-    // Update this to your Netlify domain
-    res.setHeader('Access-Control-Allow-Origin', 'https://warm-twilight-c35b54.netlify.app/');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    
-    next();
-});
+// Update the middleware section
+app.use(cors(corsOptions));
 
-// Socket.io configuration
+// Update Socket.io configuration
 const io = require('socket.io')(http, {
     cors: {
         origin: corsOptions.origin,
@@ -48,6 +38,26 @@ const io = require('socket.io')(http, {
     pingTimeout: 60000,
     pingInterval: 25000
 });
+
+// Update the custom headers middleware
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (corsOptions.origin.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
+    
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
+
 
 // Middleware
 app.use(express.json());
