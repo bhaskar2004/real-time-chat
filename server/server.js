@@ -15,7 +15,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const corsOptions = {
     origin: [
-        'https://your-netlify-app.netlify.app',
+        'https://warm-twilight-c35b54.netlify.app/',
         'http://localhost:5173',
         'http://localhost:3000'
     ],
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
     res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     
     // Update this to your Netlify domain
-    res.setHeader('Access-Control-Allow-Origin', 'https://your-netlify-app.netlify.app');
+    res.setHeader('Access-Control-Allow-Origin', 'https://warm-twilight-c35b54.netlify.app/');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
